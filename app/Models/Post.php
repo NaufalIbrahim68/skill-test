@@ -7,6 +7,47 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'title',
+        'content',
+        'is_draft',
+        'published_at',
+    ];
+
+    protected $casts = [
+        'is_draft' => 'boolean',
+        'published_at' => 'datetime',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_draft', false)
+            ->where('published_at', '<=', now());
+    }
+
+    public function scopeDraft($query)
+    {
+        return $query->where('is_draft', true);
+    }
+
+    public function scopeScheduled($query)
+    {
+        return $query->where('is_draft', false)
+            ->where('published_at', '>', now());
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where('is_draft', false)
+            ->where('published_at', '<=', now());
+    }
 }
