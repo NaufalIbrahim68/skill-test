@@ -18,10 +18,18 @@ class Post extends Model
         'published_at',
     ];
 
-    protected $casts = [
-        'is_draft' => 'boolean',
-        'published_at' => 'datetime',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_draft' => 'boolean',
+            'published_at' => 'datetime',
+        ];
+    }
 
     public function user()
     {

@@ -35,7 +35,7 @@ class PostTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonCount(20, 'data')
-            ->assertJsonPath('total', 25);
+            ->assertJsonPath('meta.total', 25);
     }
 
     public function test_can_show_active_post()
@@ -50,7 +50,7 @@ class PostTest extends TestCase
         $response = $this->getJson("/posts/{$post->id}");
 
         $response->assertStatus(200)
-            ->assertJsonPath('id', $post->id);
+            ->assertJsonPath('data.id', $post->id);
     }
 
     public function test_cannot_show_draft_or_scheduled_post()
@@ -89,7 +89,7 @@ class PostTest extends TestCase
         ]);
 
         $response->assertStatus(201)
-            ->assertJsonPath('title', 'Test Title');
+            ->assertJsonPath('data.title', 'Test Title');
     }
 
     public function test_only_author_can_edit_update_delete_post()
@@ -110,7 +110,7 @@ class PostTest extends TestCase
 
         $this->actingAs($author)->putJson("/posts/{$post->id}", ['title' => 'Updated Title'])
             ->assertStatus(200)
-            ->assertJsonPath('title', 'Updated Title');
+            ->assertJsonPath('data.title', 'Updated Title');
 
         $this->actingAs($author)->deleteJson("/posts/{$post->id}")
             ->assertStatus(204);
